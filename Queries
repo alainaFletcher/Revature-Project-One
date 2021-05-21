@@ -1,0 +1,151 @@
+//create tables 
+
+create table if not exists 
+branches(b_beverage string, branch_num string) 
+row format delimited fields terminated by ',';
+ 
+load data inpath '/user/alainaf/Bev_BranchA.txt' into table branches;
+load data inpath '/user/alainaf/Bev_BranchB.txt' into table branches;
+load data inpath '/user/alainaf/Bev_BranchC.txt' into table branches;
+
+create table if not exists 
+branches(c_beverage string, bev_count int) 
+row format delimited fields terminated by ',';
+ 
+load data inpath '/user/alainaf/ Bev_ConscountA.txt' into table branches;
+load data inpath '/user/alainaf/Bev_ConscountB.txt' into table branches;
+load data inpath '/user/alainaf/ Bev_ConscountC.txt' into table branches;
+
+//Scenario 1
+select sum(counts.bev_count) as total
+from branches 
+full outer join counts 
+on (branches.b_beverage = counts.c_beverage)
+where branches.branch_num = 'Branch1’;
+
+select sum(counts.bev_count) as total
+from branches 
+full outer join counts 
+on (branches.b_beverage = counts.c_beverage)
+where branches.branch_num = 'Branch1’;
+
+
+//Scenario 2
+create table if not exists 
+branch1branch
+as select * 
+from branches 
+where branch_num= 'Branch1';
+
+create table if not exists 
+branch1_countJoin
+as select * 
+from counts 
+inner join branch1branch 
+on (branch1branch.b_beverage = counts.c_beverage);
+
+select sum(bev_count) as bev_total, 
+b_beverage 
+from branch1_countJoin 
+group by b_beverage 
+order by bev_total desc limit 1;
+
+create table if not exists 
+branch2branch 
+as select * 
+from branches 
+where branch_num= 'Branch2';
+
+create table if not exists 
+branch2_countJoin
+as select * 
+from counts 
+inner join branch2branch 
+on (branch2branch.b_beverage = counts.c_beverage);
+
+select sum(bev_count) as bev_total, 
+b_beverage 
+from branch2_countJoin 
+group by b_beverage 
+order by bev_total desc limit 1;
+
+//Scenario 3
+select distinct b_beverage, branch_num
+from branches
+where branch_num = 'Branch1' 
+or branch_num = 'Branch8' 
+or branch_num = 'Branch10';
+
+select b_beverage
+from branches 
+where branch_num = 'Branch4'
+intersect 
+select b_beverage 
+from branches 
+where branch_num = 'Branch7';
+
+//Scenario 4
+create table if not exists bevsOf1_8_10 
+as select distinct b_beverage , branch_num
+from branches
+where branch_num = 'Branch1' 
+or branch_num = 'Branch8' 
+or branch_num = 'Branch10';
+
+create table if not exists commonBevs4_7 
+as select b_beverage 
+from branches 
+where branch_num = 'Branch4'
+intersect 
+select b_beverage 
+from branches 
+where branch_num = 'Branch7';
+
+create view viewOf_bevsOf1_8_10 
+as select * from bevsOf1_8_10;
+
+create view viewOf_commonBevs4_7 
+as select * from commonBevs4_7;
+
+show views;
+
+create table indexed_bevsof1_8_10 as 
+select * from bevsof1_8_10;
+
+create index bev_index on table indexed_bevsof1_8_10(b_beverage) as 'COMPACT' with deferred rebuild;
+alter index bev_index on indexed_bevsof1_8_10 rebuild;
+show index on indexed_bevsof1_8_10; 
+
+create table part_bevsof1_8_10 (b_beverage string) partitioned by (branch_num string);
+set hive.exec.dynamic.partition.mode = nonstrict;
+set hive.exec.dynamic.partition=true;
+insert into part_bevsof1_8_10 partition (branch_num) select * from bevsof1_8_10;
+
+//Scenario 5
+alter table bevsOf1_8_10 
+set tblproperties 
+('note' = 'updated may 2021', 
+'comment' = '(:');
+
+show tblproperties bevsOf1_8_10;
+
+//Scenario 6
+create table if not exists 
+indexed_bevsOf1_8_10 
+as select *, 
+row_number() 
+over(order by b_beverage)
+bev_index 
+from bevsOf1_8_10;
+
+insert overwrite 
+table indexed_bevsOf1_8_10 
+select * 
+from indexed_bevsOf1_8_10 
+where bev_index != 5;
+
+select * 
+from indexed_bevsOf1_8_10;
+
+
+
