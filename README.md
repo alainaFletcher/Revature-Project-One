@@ -1,4 +1,17 @@
 # Revature-Project-One
+
+
+
+    Demonstrate HDFS & HIVE commands
+    Handle reading data from HDFS to a table
+    Compose SQL queries
+    Implement commands in real time scenarios
+    Utilize Spark optimization techniques
+    Alter table properties
+    Exhibit proficiency with table manipulation in order to extract desired data
+    Present and communicate results
+
+
 ![image](https://user-images.githubusercontent.com/82099912/119141973-8c870e80-ba0b-11eb-9381-5b8eb6b6344a.png)
 ![image](https://user-images.githubusercontent.com/82099912/119142067-a7598300-ba0b-11eb-9ad6-a1b20e13f61d.png)
 ![image](https://user-images.githubusercontent.com/82099912/119142090-acb6cd80-ba0b-11eb-9fbd-666a58c118b3.png)
