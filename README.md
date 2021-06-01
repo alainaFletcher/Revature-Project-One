@@ -1,7 +1,12 @@
 # Revature-Project-One
 
+Technologies Used
 
+    HDFS: high availability storage system using the Hadoop framework 
+    Hive: data warehouse software for reading, writing and managing large data set files using HQL an sql like query language
+    DBeaver:  SQL client software application and a database administration tool
 
+Features
     Demonstrate HDFS & HIVE commands
     Handle reading data from HDFS to a table
     Compose SQL queries
@@ -10,6 +15,7 @@
     Alter table properties
     Exhibit proficiency with table manipulation in order to extract desired data
     Present and communicate results
+
 
 
 ![image](https://user-images.githubusercontent.com/82099912/119141973-8c870e80-ba0b-11eb-9381-5b8eb6b6344a.png)
